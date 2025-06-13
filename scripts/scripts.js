@@ -238,7 +238,7 @@ loadHierarchyFromCSV(
         <strong>${d.data.name}</strong><br/>
         ID: ${d.data.id}<br/>
         Responsable: ${d.data.responsable || "N/D"}<br/>
-        Nick: ${d.data.nick || "N/D"}
+        Iniciales: ${d.data.iniciales || "N/D"}
       `
         )
         .style("left", event.pageX + 15 + "px")
