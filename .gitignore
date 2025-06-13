@@ -1,0 +1,5 @@
+# ─── Ignorar todos los desktop.ini ─────────────────────────────────────────────
+desktop.ini
+
+# ─── Ignorar la imagen exportada del organigrama ──────────────────────────────
+organigrama.png
