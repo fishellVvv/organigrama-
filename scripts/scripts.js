@@ -236,7 +236,12 @@ loadHierarchy(
           `<strong>${d.data.name}</strong><br/>
          ID: ${d.data.id}<br/>
          Responsable: ${d.data.responsable || "N/D"}<br/>
-         Iniciales: ${d.data.iniciales || "N/D"}`
+         Iniciales: ${d.data.iniciales || "N/D"}``
+        <strong>${d.data.name}</strong><br/>
+        ID: ${d.data.id}<br/>
+        Responsable: ${d.data.responsable || "N/D"}<br/>
+        Iniciales: ${d.data.iniciales || "N/D"}
+      `
         )
         .style("left", e.pageX + 15 + "px")
         .style("top", e.pageY + "px")
