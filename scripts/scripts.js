@@ -233,10 +233,7 @@ loadHierarchy(
     .on("mouseenter", (e, d) => {
       tooltip
         .html(
-          `<strong>${d.data.name}</strong><br/>
-         ID: ${d.data.id}<br/>
-         Responsable: ${d.data.responsable || "N/D"}<br/>
-         Iniciales: ${d.data.iniciales || "N/D"}``
+          `
         <strong>${d.data.name}</strong><br/>
         ID: ${d.data.id}<br/>
         Responsable: ${d.data.responsable || "N/D"}<br/>
