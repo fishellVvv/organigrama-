@@ -33,16 +33,61 @@ const angleWeight = (t) =>
   1 + AMPLITUDE * Math.pow(Math.abs(Math.cos(t * 2 * Math.PI)), EXPONENT);
 
 async function loadHierarchy(url) {
-  const csv = await d3.csv(url);
+  // util: limpia BOM/espacios y normaliza a string
+  const clean = (v) =>
+    (v ?? "")
+      .toString()
+      .replace(/\uFEFF/g, "")
+      .trim();
+
+  // lee y sanea cada fila
+  const rows = await d3.csv(url, (d) => ({
+    id: clean(d.id),
+    name: clean(d.name),
+    parent: clean(d.parent),
+    responsable: clean(d.responsable || d.Responsable),
+    iniciales: clean(d.iniciales || d.nick || d.Nick),
+  }));
+
+  // quita filas sin id (suelen ser las “vacías” al final de la hoja)
+  const data = rows.filter((r) => r.id);
+
+  // crea el mapa de nodos
   const map = new Map();
-  csv.forEach((d) => map.set(d.id, { ...d, children: [] }));
-  let root = null;
-  csv.forEach((d) => {
-    const node = map.get(d.id);
-    if (d.parent) map.get(d.parent).children.push(node);
-    else root = node;
-  });
-  return d3.hierarchy(root);
+  for (const r of data) {
+    if (!map.has(r.id)) map.set(r.id, { ...r, children: [] });
+  }
+
+  // engancha hijos a padres; si falta el padre, lo stub-ea y avisa
+  for (const r of data) {
+    const node = map.get(r.id);
+    if (r.parent) {
+      let p = map.get(r.parent);
+      if (!p) {
+        console.warn(
+          "⚠️ Parent no encontrado. Creo stub:",
+          r.parent,
+          "para",
+          r.id
+        );
+        p = { id: r.parent, name: r.parent, parent: "", children: [] };
+        map.set(r.parent, p);
+      }
+      p.children.push(node);
+    }
+  }
+
+  // intenta deducir la raíz si no se marcó explícitamente (fila sin parent)
+  let root =
+    data.find((r) => !r.parent)?.id ||
+    [...map.keys()].find((id) => !data.some((r) => r.parent === id));
+
+  if (!root) {
+    // último recurso: el primero del mapa
+    root = map.keys().next().value;
+  }
+
+  return d3.hierarchy(map.get(root));
 }
 
 loadHierarchy(
