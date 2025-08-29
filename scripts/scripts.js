@@ -226,19 +226,16 @@ loadHierarchy(
     .text((d) => d.line);
 
   /* ─────────── Tooltip ─────────── */
-
   const tooltip = d3.select("#tooltip");
 
   etiquetas
     .on("mouseenter", (e, d) => {
       tooltip
         .html(
-          `
-        <strong>${d.data.name}</strong><br/>
-        ID: ${d.data.id}<br/>
-        Responsable: ${d.data.responsable || "N/D"}<br/>
-        Iniciales: ${d.data.iniciales || "N/D"}
-      `
+          `<strong>${d.data.name}</strong><br/>
+         ID: ${d.data.id}<br/>
+         Responsable: ${d.data.responsable || "N/D"}<br/>
+         Iniciales: ${d.data.iniciales || "N/D"}`
         )
         .style("left", e.pageX + 15 + "px")
         .style("top", e.pageY + "px")
@@ -248,4 +245,21 @@ loadHierarchy(
       tooltip.style("left", e.pageX + 15 + "px").style("top", e.pageY + "px")
     )
     .on("mouseleave", () => tooltip.style("opacity", 0));
+
+  /* ─────────── catch de final de carga ─────────── */
+  loadHierarchy(
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTNXhGTkH8VkrFUx8kfwH37I2FfRKk7iwbHsDpfhNGBZj7EvNCNuzBA6ihlVfkmVR7JhM_NtzkEq4nt/pub?gid=1139573771&single=true&output=csv"
+  )
+    .then((root) => {
+      // ... tu código actual ...
+    })
+    .catch((err) => {
+      console.error("Error cargando la jerarquía:", err);
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        `<pre style="color:#ffb; background:#300; padding:8px">Error: ${String(
+          err
+        )}</pre>`
+      );
+    });
 });
